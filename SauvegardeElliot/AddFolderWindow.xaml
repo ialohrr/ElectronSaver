@@ -1,0 +1,64 @@
+﻿<Window x:Class="SauvegardeElliot.AddFolderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SauvegardeElliot"
+        mc:Ignorable="d"
+        Title="Ajout de dossier" Height="400" Width="765" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TextBox">
+                                <Border BorderThickness="1" CornerRadius="1">
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FFABADB3" Offset="0"/>
+                                            <GradientStop Color="#FFABADB3" Offset="0.044"/>
+                                            <GradientStop Color="#FFE2E3EA" Offset="0.060"/>
+                                            <GradientStop Color="#FFE3E9EF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+                                    <TextBlock Padding="4,2,0,0" Text="{TemplateBinding Text}" TextTrimming="CharacterEllipsis"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="GhostWhite" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="Red" BorderThickness="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#f2f2f2" TargetName="Border" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid >
+        <TextBox x:Name="Nametxt" HorizontalAlignment="Left" Height="24" Margin="36,75,0,0" Text="Nom du dossier" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"/>
+        <TextBox x:Name="SourceTxt" HorizontalAlignment="Left" Height="24" Margin="36,146,0,0" Text="Source" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"/>
+        <TextBox x:Name="DestTxt" HorizontalAlignment="Left" Height="24" Margin="36,217,0,0" Text="Destination" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"/>
+        <Button x:Name="SrcBrowser" Content="  ...  " HorizontalAlignment="Left" Margin="268,146,0,0" VerticalAlignment="Top" Height="24" Click="SrcSelect"/>
+        <Button x:Name="DestBrowser" Content="  ...  " HorizontalAlignment="Left" Margin="268,217,0,0" VerticalAlignment="Top" Height="24" Click="DestClick"/>
+        <Button x:Name="Valid" Content="Valider" HorizontalAlignment="Left" Margin="150,276,0,21" Width="173" Click="ValidCLick" Height="30" VerticalAlignment="Bottom"/>
+        <Button x:Name="Annuler" Content="Annuler" HorizontalAlignment="Left" Margin="416,276,0,21" Width="173" Click="AnnulerClick" Height="30" VerticalAlignment="Bottom"/>
+        <TreeView x:Name="treeView" HorizontalAlignment="Left" Height="166" Margin="441,75,0,0" VerticalAlignment="Top" Width="296"/>
+        <Button x:Name="ignore" Content="Selectionner" HorizontalAlignment="Center" Height="32" Margin="0,78,0,0" VerticalAlignment="Top" Width="78"/>
+        <GroupBox x:Name="groupBox" Header="FIchier a ignorer" HorizontalAlignment="Left" Height="209" Margin="330,44,0,0" VerticalAlignment="Top" Width="425"/>
+
+    </Grid>
+</Window>

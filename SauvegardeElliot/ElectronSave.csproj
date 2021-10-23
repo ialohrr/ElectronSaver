@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ressources\export.png" />
+    <None Remove="ressources\gears.png" />
+    <None Remove="ressources\restore.png" />
+    <None Remove="ressources\save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ressources\export.png" />
+    <Resource Include="ressources\gears.png" />
+    <Resource Include="ressources\restore.png" />
+    <Resource Include="ressources\save.png" />
+  </ItemGroup>
+
+</Project>
