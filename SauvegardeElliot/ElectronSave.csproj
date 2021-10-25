@@ -5,6 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="WinCopies.WindowsAPICodePack.Shell" Version="2.10.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="ressources\export.png" />
     <Resource Include="ressources\gears.png" />
     <Resource Include="ressources\restore.png" />
     <Resource Include="ressources\save.png" />
   </ItemGroup>
+
+
+
 
 </Project>

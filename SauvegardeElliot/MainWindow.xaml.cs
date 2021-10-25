@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SauvegardeElliot
 {
@@ -27,6 +14,7 @@ namespace SauvegardeElliot
             InitializeComponent();
             Folders = new ObservableCollection<FoldertoSave>();
             FolderLIst.ItemsSource = Folders;
+            FolderCBx.ItemsSource = Folders;
         }
 
         public static ObservableCollection<FoldertoSave> Folders;
@@ -35,8 +23,8 @@ namespace SauvegardeElliot
         {
             AddFolderWindow addFolder = new AddFolderWindow();
             bool? result = addFolder.ShowDialog();
-            if (result==true)
-              Folders.Add(new FoldertoSave(addFolder.FolderName, addFolder.FolderSrc, addFolder.FolderDest));
+            if (result == true)
+                Folders.Add(new FoldertoSave(addFolder.FolderName, addFolder.FolderSrc, addFolder.FolderDest));
         }
 
         private void deleteClick(object sender, RoutedEventArgs e)

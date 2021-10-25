@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SauvegardeElliot
 {
@@ -19,10 +9,12 @@ namespace SauvegardeElliot
     /// </summary>
     public partial class AddFolderWindow : Window
     {
-
+        public static ObservableCollection<string> FileListTIgnore;
         public AddFolderWindow()
         {
             InitializeComponent();
+            FileListTIgnore = new ObservableCollection<string>();
+            FileIgnoreListBx.ItemsSource = FileListTIgnore;
         }
 
         private void SrcSelect(object sender, RoutedEventArgs e)
@@ -71,6 +63,21 @@ namespace SauvegardeElliot
         {
             DialogResult = true;
             this.Close();
+        }
+
+        private void IgnoreCLck(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog openFileDlg = new System.Windows.Forms.OpenFileDialog();
+            openFileDlg.Multiselect = true;
+            openFileDlg.Title = "Selectionner un ou des fichers a ignorer";
+            openFileDlg.InitialDirectory = FolderSrc;
+
+            var result = openFileDlg.ShowDialog();
+            if (result.ToString() != string.Empty)
+            {
+                foreach(string path in openFileDlg.FileNames)
+                FileListTIgnore.Add(path.Replace(FolderSrc,""));
+            }
         }
     }
 }

@@ -56,9 +56,20 @@
         <Button x:Name="DestBrowser" Content="  ...  " HorizontalAlignment="Left" Margin="268,217,0,0" VerticalAlignment="Top" Height="24" Click="DestClick"/>
         <Button x:Name="Valid" Content="Valider" HorizontalAlignment="Left" Margin="150,276,0,21" Width="173" Click="ValidCLick" Height="30" VerticalAlignment="Bottom"/>
         <Button x:Name="Annuler" Content="Annuler" HorizontalAlignment="Left" Margin="416,276,0,21" Width="173" Click="AnnulerClick" Height="30" VerticalAlignment="Bottom"/>
-        <TreeView x:Name="treeView" HorizontalAlignment="Left" Height="166" Margin="441,75,0,0" VerticalAlignment="Top" Width="296"/>
-        <Button x:Name="ignore" Content="Selectionner" HorizontalAlignment="Center" Height="32" Margin="0,78,0,0" VerticalAlignment="Top" Width="78"/>
-        <GroupBox x:Name="groupBox" Header="FIchier a ignorer" HorizontalAlignment="Left" Height="209" Margin="330,44,0,0" VerticalAlignment="Top" Width="425"/>
+        <GroupBox x:Name="groupBox" Header="Fichier a ignorer" HorizontalAlignment="Left" Height="96" Margin="330,61,0,0" VerticalAlignment="Top" Width="425" Panel.ZIndex="-1">
+            <Grid>
+                <ListBox Margin="100,0,0,0" Name="FileIgnoreListBx" VerticalAlignment="center" HorizontalAlignment="Left" Width="300" Height="60">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="IgnoreFIle" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Ajouter" Width="50" Height="29" Margin="30,0,0,0" Click="IgnoreCLck"/>
+            </Grid>
+        </GroupBox>
 
     </Grid>
 </Window>

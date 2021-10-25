@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SauvegardeElliot
 {
@@ -17,6 +13,9 @@ namespace SauvegardeElliot
         public string src { get { return _src; } set { src = value; RaiseProperChanged(); } }
 
         private string _dest;
+
+        private ObservableCollection<string> FilePathToIgnore;
+        private ObservableCollection<string> SubFOlderToIgnore;
 
         public FoldertoSave(string name, string source, string dest)
         {

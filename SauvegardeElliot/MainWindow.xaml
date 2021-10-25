@@ -89,7 +89,7 @@
                             </StackPanel>
                         </Border>
                     </Button>
-                    <ComboBox x:Name="FolderCBx" HorizontalAlignment="Center" Height="34" Margin="0,331,0,0" VerticalAlignment="Top" Width="241"/>
+                    <ComboBox x:Name="FolderCBx" HorizontalAlignment="Center" Height="34" Margin="0,331,0,0" VerticalAlignment="Top" Width="241" ItemsSource="{Binding Folders}" DisplayMemberPath="name"/>
                 </Grid>
             </TabItem>
             <TabItem>
