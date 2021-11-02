@@ -1,32 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <Deterministic>false</Deterministic>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="ressources\export.png" />
-    <None Remove="ressources\gears.png" />
-    <None Remove="ressources\restore.png" />
-    <None Remove="ressources\save.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="WinCopies.WindowsAPICodePack.Shell" Version="2.10.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="ressources\export.png" />
-    <Resource Include="ressources\gears.png" />
-    <Resource Include="ressources\restore.png" />
-    <Resource Include="ressources\save.png" />
-  </ItemGroup>
-
-
-
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
 </Project>

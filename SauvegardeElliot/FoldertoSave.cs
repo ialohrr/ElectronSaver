@@ -1,8 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SauvegardeElliot
+namespace ElectronSave
 {
     public class FoldertoSave : INotifyPropertyChanged
     {
@@ -14,14 +15,26 @@ namespace SauvegardeElliot
 
         private string _dest;
 
-        private ObservableCollection<string> FilePathToIgnore;
-        private ObservableCollection<string> SubFOlderToIgnore;
 
-        public FoldertoSave(string name, string source, string dest)
+        public List<string> FileToIgnore { get; }
+        public List<string> FolderToIgnore { get; }
+
+        public FoldertoSave(string name, string source, string dest, ObservableCollection<string> FilePathToIgnore, ObservableCollection<string> SubFOlderToIgnore)
         {
             _name = name;
             _src = source;
             _dest = dest;
+            FileToIgnore = new List<string>(FilePathToIgnore);
+            FolderToIgnore = new List<string>(SubFOlderToIgnore);
+        }
+
+        public FoldertoSave(string name, string source, string dest, List<string> FilePathToIgnore, List<string> SubFOlderToIgnore)
+        {
+            _name = name;
+            _src = source;
+            _dest = dest;
+            FileToIgnore = new List<string>(FilePathToIgnore);
+            FolderToIgnore = new List<string>(SubFOlderToIgnore);
         }
 
         public string dest { get { return _dest; } set { _dest = value; RaiseProperChanged(); } }

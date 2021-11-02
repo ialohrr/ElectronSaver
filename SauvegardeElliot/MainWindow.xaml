@@ -1,13 +1,31 @@
-﻿<Window x:Class="SauvegardeElliot.MainWindow"
+﻿<Window x:Name="ElectronSaver" x:Class="ElectronSave.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SauvegardeElliot"
+        xmlns:local="clr-namespace:ElectronSave"
         mc:Ignorable="d"
-        Title="MainWindow" Height="562" Width="1058">
+        Title="ElectronSaver" Height="562" Width="1058" Icon="/Icone.png" ResizeMode="CanMinimize" Closed="OnClose">
     <Window.Resources>
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Adobe Garamond Pro"/>
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Adobe Garamond Pro"/>
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Adobe Garamond Pro"/>
+            <Setter Property="FontSize" Value="20" />
+        </Style>
         <Style TargetType="{x:Type Button}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Adobe Garamond Pro"/>
+            <Setter Property="FontSize" Value="20" />
             <Setter Property="Background" Value="GhostWhite" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -26,7 +44,8 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Center" Height="426" VerticalAlignment="Center" Width="1040" TabStripPlacement="Left" BorderThickness="0">
+        <Image Source="ressources/NameTag.png" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="1" Width="400" Margin="220,0,0,0"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Center" Height="445" VerticalAlignment="Center" Width="1040" TabStripPlacement="Left" BorderThickness="0">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -41,10 +60,11 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="Red" />
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="Red" />
+                                        <Setter TargetName="Border" Property="BorderThickness" Value="4" />
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="False">
-                                        <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                        <Setter TargetName="Border" Property="Background" Value="White" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -54,63 +74,42 @@
             </TabControl.Resources>
             <TabItem BorderThickness="0">
                 <TabItem.Header>
-                    <Image Source="ressources/save.png" Width="200" Margin="0,4,0,4"></Image>
+                    <Image Source="icons/save.ico" Width="200" Margin="0,4,0,4"></Image>
                 </TabItem.Header>
                 <Grid Background="White" Margin="0,10,0,10" Width="790">
-                    <Button x:Name="saveBtn" HorizontalAlignment="Left" Height="210" Margin="110,66,0,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" BorderThickness="0" BorderBrush="Transparent">
-                        <Border HorizontalAlignment="Right" BorderBrush="Red" BorderThickness="6">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#f3f2f2" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <StackPanel Orientation="Horizontal">
-                                <Image  RenderOptions.BitmapScalingMode="HighQuality"   Source="ressources/export.png"   />
-                            </StackPanel>
-                        </Border>
+                    <Button x:Name="saveBtn" HorizontalAlignment="Left" Height="210" Margin="110,66,0,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="SaveFileClick">
+                        <StackPanel>
+                            <Image Source="icons/export.ico" Margin="3" Width="auto" Height="160"/>
+                            <Label Content="Sauvegarder" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        </StackPanel>
                     </Button>
-                    <Button x:Name="restoreBtn" HorizontalAlignment="Right" Height="210" Margin="0,66,110,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" BorderThickness="0" BorderBrush="Transparent">
-                        <Border HorizontalAlignment="Right" BorderBrush="Red" BorderThickness="6">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#f3f2f2" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <StackPanel Orientation="Horizontal">
-                                <Image  RenderOptions.BitmapScalingMode="HighQuality"   Source="ressources/restore.png"   />
-                            </StackPanel>
-                        </Border>
+                    <Button x:Name="restoreBtn" HorizontalAlignment="Right" Height="210" Margin="0,66,110,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="RestoreClick">
+                        <StackPanel>
+                            <Image Source="icons/restore.ico"  Width="140" Height="160" Margin="0,0,15,0"/>
+                            <Label Content="Restaurer" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="2"/>
+                        </StackPanel>
                     </Button>
                     <ComboBox x:Name="FolderCBx" HorizontalAlignment="Center" Height="34" Margin="0,331,0,0" VerticalAlignment="Top" Width="241" ItemsSource="{Binding Folders}" DisplayMemberPath="name"/>
+                    <Label x:Name="labelDossier" Content="Sélection du dossier" HorizontalAlignment="Center" Margin="0,295,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <Image Source="ressources/gears.png" Width="200"  Margin="0,4,0,4"/>
+                    <Image Source="icons/gears.ico" Width="200"  Margin="0,4,0,4"/>
                 </TabItem.Header>
-                <Grid Background="White" Width="806">
-                    <DataGrid x:Name="FolderLIst" HorizontalAlignment="center" Height="230" Margin="0,30,0,0" VerticalAlignment="Top" Width="750" AlternatingRowBackground="LightGray" AlternationCount="2" AutoGenerateColumns="False" SelectionMode="Single">
+                <Grid Background="White" Width="806" Margin="0,25,0,10">
+                    <DataGrid x:Name="FolderLIst" HorizontalAlignment="center" Height="260" Margin="0,30,0,0" VerticalAlignment="Top" Width="750" AlternatingRowBackground="LightGray" AlternationCount="2" AutoGenerateColumns="False" SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Nom" Width="200" Binding="{Binding name}"/>
                             <DataGridTextColumn Header="Dossier Source" Width="275" Binding="{Binding src}"/>
                             <DataGridTextColumn Header="Dossier Destination" Width="275" Binding="{Binding dest}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="Add" Content="Ajouter" HorizontalAlignment="center" Height="30" Margin="0,280,450,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="AddClick" />
-                    <Button x:Name="Edit" Content="Modifier" HorizontalAlignment="center" Height="30" Margin="0,280,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite"/>
-                    <Button x:Name="Remove" Content="Supprimer" HorizontalAlignment="center" Height="30" Margin="450,280,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="deleteClick"/>
+                    <Button x:Name="Add" Content="Ajouter" HorizontalAlignment="center" Height="40" Margin="0,310,450,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="AddClick" />
+                    <Button x:Name="Edit" Content="Modifier" HorizontalAlignment="center" Height="40" Margin="0,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="ModifyClick"/>
+                    <Button x:Name="Remove" Content="Supprimer" HorizontalAlignment="center" Height="40" Margin="450,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="deleteClick"/>
                 </Grid>
             </TabItem>
         </TabControl>
-        <TextBlock x:Name="Title1" Text="Electron" HorizontalAlignment="Center" FontSize="70" FontFamily="Ubuntu" FontWeight="Bold" VerticalAlignment="Top" Margin="0,2,200,0" Height="70" />
-        <TextBlock x:Name="Title2" Text="Saver" HorizontalAlignment="Center" FontSize="70" FontFamily="Ubuntu" FontWeight="Bold"  VerticalAlignment="Top" Foreground="Red" Margin="240,2,0,0" Height="70"/>
     </Grid>
 </Window>

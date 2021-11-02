@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Deterministic>false</Deterministic>
+    <ApplicationIcon>ES.ico</ApplicationIcon>
+    <Version>1.5.0</Version>
+    <Authors>ImElectron</Authors>
+    <Company>ImElectron</Company>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="246501508_886424728677308_6866346575190904928_n.png" />
+    <None Remove="Icone.png" />
+    <None Remove="icons\export.png" />
+    <None Remove="icons\gears.png" />
+    <None Remove="icons\Ico\ES.ico" />
+    <None Remove="icons\Ico\export.ico" />
+    <None Remove="icons\Ico\gears.ico" />
+    <None Remove="icons\Ico\restore.ico" />
+    <None Remove="icons\Ico\Save.ico" />
+    <None Remove="icons\restore.png" />
+    <None Remove="icons\save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icone.png" />
+    <Resource Include="icons\ES.ico" />
+    <Resource Include="icons\export.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\gears.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\Icone.png" />
+    <Resource Include="icons\NameTag.png" />
+    <Resource Include="icons\restore.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="icons\Save.ico" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(ProjectDir)InsertIcons.exe &quot;$(TargetPath)&quot; &quot;$(ProjectDir)icons&quot;" />
+  </Target>
+
+
+
+
+</Project>
