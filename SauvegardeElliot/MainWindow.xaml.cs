@@ -14,13 +14,19 @@ namespace ElectronSave
         public MainWindow()
         {
             InitializeComponent();
+            try
+            {
 
-            ParamSaver = new();
-            Folders = new(ParamSaver.Folders);
-            //foreach (FoldertoSave folder in ParamSaver.Folders)
-            //    Folders.Add(folder);
-            FolderLIst.ItemsSource = Folders;
-            FolderCBx.ItemsSource = Folders;
+                ParamSaver = new();
+                Folders = new(ParamSaver.Folders);
+                FolderLIst.ItemsSource = Folders;
+                FolderCBx.ItemsSource = Folders;
+            }
+            catch (System.Exception e)
+            {
+                _ = MessageBox.Show(e.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
+            }
         }
 
 
@@ -31,27 +37,41 @@ namespace ElectronSave
 
         private void AddClick(object sender, RoutedEventArgs e)
         {
-            AddFolderWindow addFolder = new();
-            bool? result = addFolder.ShowDialog();
-            if (result == true)
+            try
             {
-                Folders.Add(addFolder.Folder);
-                ParamSaver.SaveConfig(addFolder.Folder);
+                AddFolderWindow addFolder = new();
+                bool? result = addFolder.ShowDialog();
+                if (result == true)
+                {
+                    Folders.Add(addFolder.Folder);
+                    ParamSaver.SaveConfig(addFolder.Folder);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                _ = MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void deleteClick(object sender, RoutedEventArgs e)
         {
-            var item = FolderLIst.SelectedItem;
-            if (item != null)
+            try
             {
-                string CourseName = (FolderLIst.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text;
-                MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to delete the folder " + CourseName + "?");
-                if (result == MessageBoxResult.OK)
+                var item = FolderLIst.SelectedItem;
+                if (item != null)
                 {
-                    ParamSaver.DeletFolder((FoldertoSave)item);
-                    Folders.Remove((FoldertoSave)item);
+                    string CourseName = (FolderLIst.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text;
+                    MessageBoxResult result = System.Windows.MessageBox.Show("Êtes vous sur de vouloir supprimer la configuration " + CourseName + "?");
+                    if (result == MessageBoxResult.OK)
+                    {
+                        ParamSaver.DeletFolder((FoldertoSave)item);
+                        Folders.Remove((FoldertoSave)item);
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                _ = MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -68,18 +88,26 @@ namespace ElectronSave
         }
         public void ModifyFolder(FoldertoSave item)
         {
-            if (item != null)
+            try
             {
-                var index = Folders.IndexOf(item);
-                AddFolderWindow addFolder = new(item);
-                bool? result = addFolder.ShowDialog();
-                if (result == true)
+                if (item != null)
                 {
-                    Folders.Remove(item);
-                    Folders.Insert(index, addFolder.Folder);
-                    ParamSaver.DeletFolder(addFolder.Folder);
-                    ParamSaver.SaveConfig(addFolder.Folder);
+                    var index = Folders.IndexOf(item);
+                    AddFolderWindow addFolder = new(item);
+                    bool? result = addFolder.ShowDialog();
+                    if (result == true)
+                    {
+                        Folders.Remove(item);
+                        Folders.Insert(index, addFolder.Folder);
+                        ParamSaver.DeletFolder(addFolder.Folder);
+                        ParamSaver.SaveConfig(addFolder.Folder);
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                _ = MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
         }
 
@@ -91,25 +119,40 @@ namespace ElectronSave
 
         public void SaveFiles(FoldertoSave SelectedFolder)
         {
-            if (SelectedFolder != null)
+            try
             {
-                FileCopier fileCopier = new(SelectedFolder, true);
-
-                if (fileCopier.toCopies.Count > 0)
+                if (SelectedFolder != null)
                 {
-                    ReviewFile ReviewWindow = new ReviewFile(fileCopier.toCopies);
-                    bool? result = ReviewWindow.ShowDialog();
-                    if (result != null && result == true)
+                    FileCopier fileCopier = new(SelectedFolder, true);
+
+                    if (fileCopier.toCopies.Count > 0)
                     {
-                        fileCopier.toCopies = ReviewWindow.FilesToCopy;
-                        copy = new Task(() => fileCopier.CopyFile());
-                        copy.Start();
+                        ReviewFile ReviewWindow = new ReviewFile(fileCopier.toCopies);
+                        bool? result = ReviewWindow.ShowDialog();
+                        if (result != null && result == true)
+                        {
+                            fileCopier.toCopies = ReviewWindow.FilesToCopy;
+
+                            if (fileCopier.CheckEnoughSpace())
+                            {
+                                copy = new Task(() => fileCopier.CopyFile());
+                                copy.Start();
+                            }
+                            else
+                            {
+                                _ = MessageBox.Show("Il n'y a pas assez de place disponible dans le disque de destination.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _ = MessageBox.Show("Le dossier de sauvegarde est à jour");
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Le dossier de sauvegarde est à jour");
-                }
+            }
+            catch (System.Exception e)
+            {
+                _ = MessageBox.Show(e.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -121,23 +164,39 @@ namespace ElectronSave
 
         public void RestoreFiles(FoldertoSave SelectedFolder)
         {
-            if (SelectedFolder != null)
+            try
             {
-                var result = MessageBox.Show("Êtes vous sur de vouloir remplacer tous les fichier du dossier " + SelectedFolder.name
-                                                             + " avec ceux sauvegarder dans le dossier " + SelectedFolder.dest, "Restoration", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.OK)
+                if (SelectedFolder != null)
                 {
-                    FileCopier fileCopier = new(SelectedFolder, false);
-                    copy = new Task(() => fileCopier.CopyFilesRecursively(SelectedFolder));
-                    copy.Start();
-                }
+                    var result = MessageBox.Show("Êtes vous sur de vouloir remplacer tous les fichier du dossier " + SelectedFolder.name
+                                                                 + " avec ceux sauvegarder dans le dossier " + SelectedFolder.dest, "Restoration", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        FileCopier fileCopier = new(SelectedFolder, false);
+                        copy = new Task(() => fileCopier.CopyFilesRecursively(SelectedFolder));
+                        copy.Start();
+                    }
 
+                }
+            }
+            catch (System.Exception e)
+            {
+                _ = MessageBox.Show(e.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
         }
 
         private void OnClose(object sender, System.EventArgs e)
         {
-            copy?.Wait();
+            try
+            {
+                copy?.Wait();
+            }
+            catch (System.Exception e)
+            {
+                _ = MessageBox.Show(e.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
+            }
         }
     }
 }

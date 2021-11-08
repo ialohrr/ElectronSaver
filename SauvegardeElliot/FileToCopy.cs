@@ -9,13 +9,16 @@ namespace ElectronSave
         public string DestPath { get; }
         public DateTime lastModified { get; }
         public bool selected { get; set; }
-
-        public FileToCopy(string name, string path, string Dest, DateTime LastModif)
+        public bool isNew { get; }
+        public long size { get; }
+        public FileToCopy(string name, string path, string Dest, DateTime LastModif, bool isNew, long size)
         {
             this.name = name;
             this.Sourcepath = path;
             DestPath = Dest;
             lastModified = LastModif;
+            this.isNew = isNew;
+            this.size = size;
             selected = true;
         }
     }

@@ -44,7 +44,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Image Source="ressources/NameTag.png" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="1" Width="400" Margin="220,0,0,0"/>
+        <Image Source="icons/NameTag.png" HorizontalAlignment="Center" VerticalAlignment="Top" Panel.ZIndex="1" Width="400" Margin="220,0,0,0"/>
         <TabControl x:Name="tabControl" HorizontalAlignment="Center" Height="445" VerticalAlignment="Center" Width="1040" TabStripPlacement="Left" BorderThickness="0">
             <TabControl.Resources>
                 <Style TargetType="TabItem">

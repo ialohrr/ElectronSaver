@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace ElectronSave
 {
@@ -13,90 +15,163 @@ namespace ElectronSave
         {
             Folder = foldertosave;
             toCopies = new();
-            if (verifiModif)
-                listModif();
+            try
+            {
+                if (verifiModif)
+                    listModif();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw;
+            }
         }
 
         public void CopyFile()
         {
-            foreach (FileToCopy file in toCopies)
+            try
             {
-                if (file.selected)
+                foreach (FileToCopy file in toCopies)
                 {
-                    if (!Directory.Exists(Path.GetDirectoryName(file.DestPath)))
-                        Directory.CreateDirectory(Path.GetDirectoryName(file.DestPath));
-                    File.Copy(file.Sourcepath, file.DestPath, true);
+                    if (file.selected)
+                    {
+                        if (!Directory.Exists(Path.GetDirectoryName(file.DestPath)))
+                            Directory.CreateDirectory(Path.GetDirectoryName(file.DestPath));
+                        File.Copy(file.Sourcepath, file.DestPath, true);
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool CheckEnoughSpace()
+        {
+            try
+            {
+                long cumulativeSourceSize = 0;
+                long cumulativeDestSize = 0;
+                foreach (FileToCopy file in toCopies)
+                {
+                    cumulativeSourceSize += file.size;
+                    if (!file.isNew)
+                        cumulativeDestSize = new FileInfo(file.DestPath).Length;
+                }
+
+                long totalNeededSpace = cumulativeSourceSize - cumulativeDestSize;
+                if (totalNeededSpace > GetDiskFreeSpace(toCopies[0].DestPath))
+                    return false;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
         void listModif()
         {
-            string[] filePathsInSrc = Directory.GetFiles(Folder.src, "*.*", SearchOption.AllDirectories);
-            foreach (string SubFolderPath in Folder.FolderToIgnore)
+            try
             {
-                string[] FilePathToIgnore = Directory.GetFiles(Path.GetFullPath(SubFolderPath, Folder.src), "*.*", SearchOption.AllDirectories);
-                filePathsInSrc = filePathsInSrc.Except(FilePathToIgnore).ToArray();
-            }
-
-            string[] EsPathToIgnore = Directory.GetFiles(Path.GetFullPath(".Es", Folder.src), "*.*", SearchOption.AllDirectories);
-            filePathsInSrc = filePathsInSrc.Except(EsPathToIgnore).ToArray();
-
-            bool ToCopy = false;
-            foreach (string file in filePathsInSrc)
-            {
-                string RelativePath = Path.GetRelativePath(Folder.src, file);
-
-                if (CheckIfIgnored(RelativePath))
-                    continue;
-
-                string DestFullPath = Path.GetFullPath(RelativePath, Folder.dest);
-
-                if (File.Exists(DestFullPath))
+                string[] filePathsInSrc = Directory.GetFiles(Folder.src, "*.*", SearchOption.AllDirectories);
+                foreach (string SubFolderPath in Folder.FolderToIgnore)
                 {
+                    string[] FilePathToIgnore = Directory.GetFiles(Path.GetFullPath(SubFolderPath, Folder.src), "*.*", SearchOption.AllDirectories);
+                    filePathsInSrc = filePathsInSrc.Except(FilePathToIgnore).ToArray();
+                }
+
+                string[] EsPathToIgnore = Directory.GetFiles(Path.GetFullPath(".Es", Folder.src), "*.*", SearchOption.AllDirectories);
+                filePathsInSrc = filePathsInSrc.Except(EsPathToIgnore).ToArray();
+
+                bool ToCopy = false;
+
+
+                foreach (string file in filePathsInSrc)
+                {
+                    string RelativePath = Path.GetRelativePath(Folder.src, file);
+
+                    if (CheckIfIgnored(RelativePath))
+                        continue;
+
+                    string DestFullPath = Path.GetFullPath(RelativePath, Folder.dest);
+
                     var SrcFilesize = new FileInfo(file).Length;
-                    var DestFileSize = new FileInfo(DestFullPath).Length;
                     var SrcLastModif = File.GetLastWriteTime(file);
-                    var DestLastModif = File.GetLastWriteTime(DestFullPath);
-                    if ((SrcFilesize != DestFileSize) || (SrcLastModif != DestLastModif))
+                    bool isNew = true;
+
+                    if (File.Exists(DestFullPath))
+                    {
+                        isNew = false;
+                        var DestFileSize = new FileInfo(DestFullPath).Length;
+                        var DestLastModif = File.GetLastWriteTime(DestFullPath);
+                        if ((SrcFilesize != DestFileSize) || (SrcLastModif != DestLastModif))
+                            ToCopy = true;
+                    }
+                    else
+                    {
                         ToCopy = true;
+                    }
 
-                }
-                else
-                {
-                    ToCopy = true;
+                    if (ToCopy)
+                    {
+                        toCopies.Add(new FileToCopy(Path.GetFileName(file), file, DestFullPath, File.GetLastWriteTime(file), isNew, SrcFilesize));
+                    }
+                    ToCopy = false;
                 }
 
-                if (ToCopy)
-                {
-                    toCopies.Add(new FileToCopy(Path.GetFileName(file), file, DestFullPath, File.GetLastWriteTime(file)));
-                }
-                ToCopy = false;
+            }
+            catch (System.Exception)
+            {
+                throw;
             }
 
         }
 
-        public void CopyFilesRecursively(FoldertoSave Folder)
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetDiskFreeSpaceEx(string lpDirectoryName, out ulong lpFreeBytesAvailable, out ulong lpTotalNumberOfBytes, out ulong lpTotalNumberOfFreeBytes);
+
+        public static long GetDiskFreeSpace(string path)
         {
-            foreach (string dirPath in Directory.GetDirectories(Folder.src, "*", SearchOption.AllDirectories))
+            if (string.IsNullOrEmpty(path))
             {
-                if (!Directory.Exists(dirPath))
-                    Directory.CreateDirectory(dirPath.Replace(Folder.src, Folder.dest));
+                throw new ArgumentNullException(nameof(path));
             }
 
-            foreach (string newPath in Directory.GetFiles(Folder.src, "*.*", SearchOption.AllDirectories))
+            ulong dummy = 0;
+
+            if (!GetDiskFreeSpaceEx(path, out ulong freeSpace, out dummy, out dummy))
             {
-                File.Copy(newPath, newPath.Replace(Folder.src, Folder.dest), true);
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            return (long)freeSpace;
+        }
+
+        public void CopyFilesRecursively(FoldertoSave Folder)
+        {
+            try
+            {
+                foreach (string dirPath in Directory.GetDirectories(Folder.src, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(Folder.src, Folder.dest));
+                }
+
+                foreach (string newPath in Directory.GetFiles(Folder.src, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(Folder.src, Folder.dest), true);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
             }
         }
 
         bool CheckIfIgnored(string path)
         {
-
-            //var test = Path.GetDirectoryName(path);
-            //var test2 = Path.GetPathRoot(test);
-            //if (Folder.FolderToIgnore.Contains(Path.GetPathRoot(test)))
-            //    return true;
 
             if (Folder.FileToIgnore.Contains(Path.GetFileName(path)))
                 return true;

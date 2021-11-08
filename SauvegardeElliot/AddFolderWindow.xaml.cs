@@ -39,7 +39,7 @@ namespace ElectronSave
         {
             System.Windows.Forms.FolderBrowserDialog openFileDlg = new System.Windows.Forms.FolderBrowserDialog();
             var result = openFileDlg.ShowDialog();
-            if (result.ToString() != string.Empty)
+            if (result.ToString() != string.Empty && result == System.Windows.Forms.DialogResult.OK)
             {
                 SourceTxt.Text = openFileDlg.SelectedPath;
             }
@@ -49,7 +49,7 @@ namespace ElectronSave
         {
             System.Windows.Forms.FolderBrowserDialog openFileDlg = new System.Windows.Forms.FolderBrowserDialog();
             var result = openFileDlg.ShowDialog();
-            if (result.ToString() != string.Empty)
+            if (result.ToString() != string.Empty && result == System.Windows.Forms.DialogResult.OK)
             {
                 DestTxt.Text = openFileDlg.SelectedPath;
             }
@@ -79,7 +79,7 @@ namespace ElectronSave
                 openFileDlg.InitialDirectory = SourceTxt.Text;
 
                 var result = openFileDlg.ShowDialog();
-                if (result.ToString() != string.Empty)
+                if (result.ToString() != string.Empty && result == System.Windows.Forms.DialogResult.OK)
                 {
                     foreach (string path in openFileDlg.FileNames)
                     {
@@ -106,7 +106,7 @@ namespace ElectronSave
             {
                 System.Windows.Forms.FolderBrowserDialog FolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
 
-                FolderBrowser.Description = "Selectionner un dossier a ignorer";
+                FolderBrowser.Description = "Selectionnez un dossier a ignorer";
 
                 var result = FolderBrowser.ShowDialog();
                 if (result.ToString() != string.Empty && result == System.Windows.Forms.DialogResult.OK)

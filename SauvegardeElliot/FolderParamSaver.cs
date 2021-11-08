@@ -12,9 +12,16 @@ namespace ElectronSave
         public List<FoldertoSave> Folders { get; }
         public FolderParamSaver()
         {
-            //DeleteAll();
-            Folders = new();
-            ReadAllSettings();
+            try
+            {
+                //DeleteAll();
+                Folders = new();
+                ReadAllSettings();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         void DeleteAll()
@@ -29,42 +36,56 @@ namespace ElectronSave
 
         public void DeletFolder(FoldertoSave Folder)
         {
-            var appSettings = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = appSettings.AppSettings.Settings;
-            if (settings[Folder.name] != null)
-                settings.Remove(Folder.name);
+            try
+            {
+                var appSettings = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = appSettings.AppSettings.Settings;
+                if (settings[Folder.name] != null)
+                    settings.Remove(Folder.name);
 
-            appSettings.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection(appSettings.AppSettings.SectionInformation.Name);
+                appSettings.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(appSettings.AppSettings.SectionInformation.Name);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void SaveConfig(FoldertoSave Folder)
         {
-            string path = Path.GetFullPath(".Es", Folder.src);
-            if (!Directory.Exists(path))
+            try
             {
-                DirectoryInfo di = Directory.CreateDirectory(path);
-                di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+                string path = Path.GetFullPath(".Es", Folder.src);
+                if (!Directory.Exists(path))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(path);
+                    di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+                }
+
+                var FolderParam = new XElement("FolderConfig",
+                        new XElement("Name", Folder.name),
+                        new XElement("Source", Folder.src),
+                        new XElement("Destination", Folder.dest),
+                        new XElement("FilesToIgnore"),
+                        new XElement("FoldersToIgnore"));
+
+                XElement FilesToIgnore = FolderParam.Element("FilesToIgnore");
+                foreach (string file in Folder.FileToIgnore)
+                    FilesToIgnore.Add(new XElement("File", file));
+
+                XElement FoldersToIgnore = FolderParam.Element("FoldersToIgnore");
+                foreach (string folder in Folder.FolderToIgnore)
+                    FoldersToIgnore.Add(new XElement("Folder", folder));
+
+                string FilePath = Path.GetFullPath(Folder.name, path);
+                FolderParam.Save(FilePath);
+                AddUpdateAppSettings(Folder.name, FilePath);
             }
-
-            var FolderParam = new XElement("FolderConfig",
-                    new XElement("Name", Folder.name),
-                    new XElement("Source", Folder.src),
-                    new XElement("Destination", Folder.dest),
-                    new XElement("FilesToIgnore"),
-                    new XElement("FoldersToIgnore"));
-
-            XElement FilesToIgnore = FolderParam.Element("FilesToIgnore");
-            foreach (string file in Folder.FileToIgnore)
-                FilesToIgnore.Add(new XElement("File", file));
-
-            XElement FoldersToIgnore = FolderParam.Element("FoldersToIgnore");
-            foreach (string folder in Folder.FolderToIgnore)
-                FoldersToIgnore.Add(new XElement("Folder", folder));
-
-            string FilePath = Path.GetFullPath(Folder.name, path);
-            FolderParam.Save(FilePath);
-            AddUpdateAppSettings(Folder.name, FilePath);
+            catch (Exception)
+            {
+                throw;
+            }
 
         }
 
@@ -110,9 +131,9 @@ namespace ElectronSave
                     }
                 }
             }
-            catch (ConfigurationErrorsException)
+            catch(Exception)
             {
-                Console.WriteLine("Error reading app settings");
+                throw;
             }
         }
 
@@ -133,9 +154,9 @@ namespace ElectronSave
                 appSettings.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(appSettings.AppSettings.SectionInformation.Name);
             }
-            catch (ConfigurationErrorsException)
+            catch (Exception)
             {
-                Console.WriteLine("Error writing app settings");
+                throw;
             }
         }
     }
