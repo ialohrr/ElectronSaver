@@ -192,9 +192,9 @@ namespace ElectronSave
             {
                 copy?.Wait();
             }
-            catch (System.Exception e)
+            catch (System.Exception ex)
             {
-                _ = MessageBox.Show(e.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBox.Show(ex.Message, "Dossier non trouver", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
         }

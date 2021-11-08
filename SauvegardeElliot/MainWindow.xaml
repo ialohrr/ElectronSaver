@@ -76,27 +76,35 @@
                 <TabItem.Header>
                     <Image Source="icons/save.ico" Width="200" Margin="0,4,0,4"></Image>
                 </TabItem.Header>
+                <TabItem.ToolTip>Sauvegarder/restaurer</TabItem.ToolTip>
                 <Grid Background="White" Margin="0,10,0,10" Width="790">
-                    <Button x:Name="saveBtn" HorizontalAlignment="Left" Height="210" Margin="110,66,0,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="SaveFileClick">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="202*"/>
+                        <RowDefinition Height="219*"/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="saveBtn" HorizontalAlignment="Left" Height="210" Margin="110,66,0,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="SaveFileClick" Grid.RowSpan="2" >
+                        <Button.ToolTip>Copier les fichiers vers le dossier de sauvegarde</Button.ToolTip>
                         <StackPanel>
                             <Image Source="icons/export.ico" Margin="3" Width="auto" Height="160"/>
                             <Label Content="Sauvegarder" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="restoreBtn" HorizontalAlignment="Right" Height="210" Margin="0,66,110,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="RestoreClick">
+                    <Button x:Name="restoreBtn" HorizontalAlignment="Right" Height="210" Margin="0,66,110,0" VerticalAlignment="Top" Width="210" Background="GhostWhite" Click="RestoreClick" Grid.RowSpan="2" >
+                        <Button.ToolTip>Restaurer les fichiers depuis le dossier de sauvegarde</Button.ToolTip>
                         <StackPanel>
                             <Image Source="icons/restore.ico"  Width="140" Height="160" Margin="0,0,15,0"/>
                             <Label Content="Restaurer" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="2"/>
                         </StackPanel>
                     </Button>
-                    <ComboBox x:Name="FolderCBx" HorizontalAlignment="Center" Height="34" Margin="0,331,0,0" VerticalAlignment="Top" Width="241" ItemsSource="{Binding Folders}" DisplayMemberPath="name"/>
-                    <Label x:Name="labelDossier" Content="Sélection du dossier" HorizontalAlignment="Center" Margin="0,295,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="FolderCBx" HorizontalAlignment="Center" Height="34" Margin="0,129,0,0" VerticalAlignment="Top" Width="242" ItemsSource="{Binding Folders}" DisplayMemberPath="name" Grid.Row="1"/>
+                    <Label x:Name="labelDossier" Content="Sélection du dossier" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
                 </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
                     <Image Source="icons/gears.ico" Width="200"  Margin="0,4,0,4"/>
                 </TabItem.Header>
+                <TabItem.ToolTip>Réglages</TabItem.ToolTip>
                 <Grid Background="White" Width="806" Margin="0,25,0,10">
                     <DataGrid x:Name="FolderLIst" HorizontalAlignment="center" Height="260" Margin="0,30,0,0" VerticalAlignment="Top" Width="750" AlternatingRowBackground="LightGray" AlternationCount="2" AutoGenerateColumns="False" SelectionMode="Single">
                         <DataGrid.Columns>
@@ -105,9 +113,9 @@
                             <DataGridTextColumn Header="Dossier Destination" Width="275" Binding="{Binding dest}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button x:Name="Add" Content="Ajouter" HorizontalAlignment="center" Height="40" Margin="0,310,450,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="AddClick" />
-                    <Button x:Name="Edit" Content="Modifier" HorizontalAlignment="center" Height="40" Margin="0,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="ModifyClick"/>
-                    <Button x:Name="Remove" Content="Supprimer" HorizontalAlignment="center" Height="40" Margin="450,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="deleteClick"/>
+                    <Button x:Name="Add" Content="Ajouter" HorizontalAlignment="center" Height="40" Margin="0,310,450,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="AddClick" ToolTip="Ajouter une nouvelle configuration de dossier à sauegarder"/>
+                    <Button x:Name="Edit" Content="Modifier" HorizontalAlignment="center" Height="40" Margin="0,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="ModifyClick" ToolTip="Modifier la configuration selectionnée"/>
+                    <Button x:Name="Remove" Content="Supprimer" HorizontalAlignment="center" Height="40" Margin="450,310,0,0" VerticalAlignment="Top" Width="150" Background="GhostWhite" Click="deleteClick" ToolTip="Supprimer la configuration selectionnée"/>
                 </Grid>
             </TabItem>
         </TabControl>
